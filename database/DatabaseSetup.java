@@ -12,17 +12,25 @@ public class DatabaseSetup {
     private static String password = "secret";
     private static String url = "jdbc:postgresql://localhost:5432/postgres";
 
-    public void setupConnection() throws ClassNotFoundException, SQLException {
+    public static void setupConnection() {
         if (conn != null)
             return;
-        Class.forName("org.postgresql.Driver");
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.getStackTrace();
+        }
         Properties props = new Properties();
         props.setProperty("user", username);
         props.setProperty("password", password);
-        conn = DriverManager.getConnection(url, props);
+        try {
+            conn = DriverManager.getConnection(url, props);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Connection getConnection() throws SQLException, ClassNotFoundException {
+    public static Connection getConnection() {
         setupConnection();
         return conn;
     }
@@ -45,24 +53,19 @@ public class DatabaseSetup {
         //TODO
         conn.createStatement().execute("CREATE TABLE Matches " +
                 "(id UNIQUE NOT NULL, " +
-                "date_players date, " +
-                "winner varchar(4), " +
+                "datePlayed date, " +
+                "winningTeam varchar(4), " +
                 "length int)");
 
         //Build summoner-id(foreign key) match-id(foreign key) items1-6 spell-progression"qwwqwerrqwwe..."
         conn.createStatement().execute("CREATE TABLE Build " +
-                "(summoner_id REFERENCES champions(id)," +
-                "match_id REFERENCES matches(id), " +
+                "(summonerId REFERENCES champions(id)," +
+                "matchId REFERENCES matches(id), " +
                 "kills int," +
                 "deaths int," +
                 "assists int," +
                 "team varchar(4), " +
-                "item1 varchar(30), " +
-                "item2 varchar(30), " +
-                "item3 varchar(30), " +
-                "item4 varchar(30), " +
-                "item5 varchar(30), " +
-                "item6 varchar(30), " +
+                "items varchar(256)," +
                 "trinket varchar(30)," +
                 "spell1 varchar(30), " +
                 "spell2 varchar(30),");
