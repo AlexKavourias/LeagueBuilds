@@ -47,7 +47,7 @@ public class Champion extends AbstractModel {
 
     @Override
     public boolean insertObject(AbstractModel toInsert) throws IllegalArgumentException {
-        if (!this.verifyMap(toInsert.toMap())) {
+        if (!this.verifyMap(toInsert.toMap(), true)) {
             return false;
         }
         try {
