@@ -13,7 +13,7 @@ import java.util.Set;
  */
 abstract class AbstractModel implements Queryable {
     protected static final Connection conn = DatabaseSetup.getConnection();
-    protected static String tableName;
+    protected static String tableName = "Abstract";
 
     public AbstractModel() {
         //Default constructor, used for interacting with methods without specifying object params
@@ -48,15 +48,19 @@ abstract class AbstractModel implements Queryable {
 
     @Override
     public String getTableName() {
-        return this.tableName;
+        return tableName;
     }
 
     /**
      * verifies that the provided Map does not contain a column that is not one of the table's column names
      * @param params the Map to verify
+     * @param strict when true, will make sure that the given map has a value for everyone column
      * @return true if the Map is valid, false otherwise
      */
-    protected boolean verifyMap(Map<String, Object> params) {
+    protected boolean verifyMap(Map<String, Object> params, boolean strict) {
+        if (strict) {
+            return params.keySet().equals(this.toMap().keySet());
+        }
         for (String key : params.keySet()) {
             if (!this.getColumnNames().contains(key))
                 return false;
