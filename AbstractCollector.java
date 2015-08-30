@@ -7,8 +7,9 @@ import main.java.riotapi.RiotApiException;
  */
 abstract class AbstractCollector {
 
-    protected static RiotApi api;
+    protected RiotApi api;
     protected static final Region[] regions = Region.values();
+    protected static final int SEASON = 5;
 
     public AbstractCollector(String apiKey) {
         if (api == null)
