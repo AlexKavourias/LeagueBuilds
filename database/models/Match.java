@@ -1,9 +1,7 @@
 package database.models;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.sql.ResultSet;
+import java.util.*;
 
 /**
  * Created by Alex on 8/28/2015.
@@ -17,17 +15,28 @@ public class Match extends AbstractModel {
     private String winner;
 
     @Override
-    public boolean findObject(Map params) {
+    protected Map<String, Object> toMap() {
+        return null;
+    }
+
+    @Override
+    public List<String> getColumnNames() {
+        return this.COLUMNS;
+    }
+
+
+    @Override
+    protected Set<AbstractModel> resultSetToAbstractModelSet(ResultSet result) {
+        return null;
+    }
+
+    @Override
+    public boolean removeObject(AbstractModel model) {
         return false;
     }
 
     @Override
-    public boolean removeObject(Map params) {
-        return false;
-    }
-
-    @Override
-    public boolean updateObject(Map params, AbstractModel newObject) throws IllegalArgumentException {
+    public boolean updateObject(AbstractModel oldObject, AbstractModel newObject) throws IllegalArgumentException {
         return false;
     }
 

@@ -8,9 +8,13 @@ import java.util.Properties;
  */
 public class DatabaseSetup {
     private static Connection conn;
-    private static String username = "database";
+    private static String username = "postgres";
     private static String password = "secret";
-    private static String url = "jdbc:postgresql://localhost:5432/postgres";
+    private static String url = "jdbc:postgresql://localhost:5432/LeagueBuilds";
+
+    public DatabaseSetup() {
+        setupConnection();
+    }
 
     public static void setupConnection() {
         if (conn != null)
@@ -35,14 +39,15 @@ public class DatabaseSetup {
         return conn;
     }
 
-    private static void createTables() throws SQLException {
+    public static void createTables() throws SQLException {
         //Champion table
+        setupConnection();
         conn.createStatement().execute("CREATE TABLE champions " +
-                "(id int UNIQUE NOT NULL," +
+                "(id int PRIMARY KEY," +
                 " name varchar(15))");
-
+        return; //TODO issue with SQL statements below
         //Summoner Table   id (primary key) Region name division-points division ladder-rank
-        conn.createStatement().execute("CREATE TABLE Summoners " +
+        /**conn.createStatement().execute("CREATE TABLE Summoners " +
                 "(id int UNIQUE NOT NULL, " +
                 "region VARCHAR(3), " +
                 "name varchar(30)," +
@@ -69,5 +74,6 @@ public class DatabaseSetup {
                 "trinket varchar(30)," +
                 "spell1 varchar(30), " +
                 "spell2 varchar(30),");
+         **/
     }
 }

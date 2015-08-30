@@ -2,6 +2,7 @@ package database.models;
 
 import database.DatabaseSetup;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
@@ -31,6 +32,22 @@ public class PlayerBuild extends AbstractModel {
 
     public PlayerBuild() {}
 
+    @Override
+    protected Map<String, Object> toMap() {
+        return null;
+    }
+
+    @Override
+    public List<String> getColumnNames() {
+        return this.COLUMNS;
+    }
+
+
+    @Override
+    protected Set<AbstractModel> resultSetToAbstractModelSet(ResultSet result) {
+        return null;
+    }
+
     public PlayerBuild(int summonerId, int matchId, int kills, int deaths, int assists, String team,
                        Set<String> items, String trinket, String spell1, String spell2) {
         this.summonerId = summonerId;
@@ -46,29 +63,27 @@ public class PlayerBuild extends AbstractModel {
     }
 
     @Override
-    public boolean findObject(Map params) {
-
-        return false;
-    }
-
-    @Override
-    public boolean removeObject(Map params) {
-        return false;
-    }
-
-    @Override
-    public boolean updateObject(Map params, AbstractModel newObject) throws IllegalArgumentException {
-        return false;
-    }
-
-    @Override
     public boolean insertObject(AbstractModel toInsert) throws IllegalArgumentException {
+
+        if (!this.verifyMap(toInsert.toMap()))
+            throw new IllegalArgumentException("Provided Map contains invalid column names");
         try {
             Statement st = DatabaseSetup.getConnection().createStatement();
-            st.execute("Insert into")
+            //TODO
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return true;
+    }
+
+    @Override
+    public boolean removeObject(AbstractModel model) {
+        return false;
+    }
+
+    @Override
+    public boolean updateObject(AbstractModel oldObject, AbstractModel newObject) throws IllegalArgumentException {
+        return false;
     }
 
     @Override
@@ -91,7 +106,6 @@ public class PlayerBuild extends AbstractModel {
         if (!spell1.equals(that.spell1)) return false;
         return spell2.equals(that.spell2);
     }
-
 
     @Override
     public int hashCode() {

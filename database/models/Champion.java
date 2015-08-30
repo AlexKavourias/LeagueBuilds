@@ -1,46 +1,85 @@
 package database.models;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Collections.*
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
 
 /**
  * Created by Alex on 8/28/2015.
  */
 public class Champion extends AbstractModel {
     private final List<String> COLUMNS = Arrays.asList("name", "id");
-    private final String tableName = "Champions";
+    private static final String tableName = "Champions";
+    private final String insertQuerySnub = "INSERT INTO Champions (id, name) VALUES(";
     private String name;
     private int id;
+    private Map<String, Object> columnToValue = new HashMap<>();
 
-    public Champion() {
-      //Default constructor, used for interacting with methods without specifying object params
-    }
+    public Champion() {}
 
     public Champion(String name, int id) {
-        this.name = name;
-        this.id = id;
+        this.columnToValue.put("name", name);
+        this.columnToValue.put("id", id);
+    }
+
+    public Champion(Map<String, Object> params) {
+        super(params);
+        this.columnToValue = params;
     }
 
     @Override
-    public boolean findObject(Map params) {
+    public boolean removeObject(AbstractModel model) {
         return false;
     }
 
     @Override
-    public boolean removeObject(Map params) {
+    public boolean updateObject(AbstractModel oldObject, AbstractModel newObject) throws IllegalArgumentException {
         return false;
     }
 
     @Override
-    public boolean updateObject(Map params, AbstractModel newObject) throws IllegalArgumentException {
-        return false;
+    public List<String> getColumnNames() {
+        return this.COLUMNS;
     }
+
 
     @Override
     public boolean insertObject(AbstractModel toInsert) throws IllegalArgumentException {
-        return false;
+        if (!this.verifyMap(toInsert.toMap())) {
+            return false;
+        }
+        System.out.println(toInsert.getValue("id") + "\t" + toInsert.getValue("name"));
+        try {
+            String query = String.format("INSERT INTO %s (id, name) VALUES(?, ?)", tableName);
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, (Integer) toInsert.getValue("id"));
+            st.setString(2, (String) toInsert.getValue("name"));
+            return st.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    protected Set<AbstractModel> resultSetToAbstractModelSet(ResultSet result) {
+        HashSet<AbstractModel> results = new HashSet<>();
+        try {
+            while (result.next()) {
+                //temporary solution, not a fan of this. TODO
+                results.add(new Champion(result.getString("name"), result.getInt("id")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return results;
+        }
+        return results;
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        return this.columnToValue;
     }
 }

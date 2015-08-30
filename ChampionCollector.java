@@ -2,6 +2,8 @@ import constant.Region;
 import dto.Static.Champion;
 import main.java.riotapi.RiotApiException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,19 +11,23 @@ import java.util.Map;
  */
 public class ChampionCollector extends AbstractCollector {
 
-    private Map<String, Integer> championsToId;
+    private List<database.models.Champion> champions;
 
     public ChampionCollector(String apiKey) {
         super(apiKey);
+        this.champions = new ArrayList<>();
     }
 
     public void collectChampionInfo(Region region) throws RiotApiException {
         Map<String, Champion> championMap = api.getDataChampionList().getData();
         for (String name : championMap.keySet()) {
-            championsToId.put(name, championMap.get(name).getId());
+            champions.add(new database.models.Champion(name, championMap.get(name).getId()));
         }
+        this.insertIntoDatbase(champions);
+    }
 
-
+    public void insertIntoDatbase(List<database.models.Champion> champions) {
+        champions.forEach(champ -> new database.models.Champion().insertObject(champ));
     }
 
     public static void main(String[] args) throws RiotApiException {
