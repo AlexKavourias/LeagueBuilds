@@ -2,7 +2,9 @@ package database.models;
 
 import constant.Region;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -13,13 +15,7 @@ import java.util.Set;
  */
 public class Summoner extends AbstractModel {
     private static final String tableName = "Summoners";
-    private final List<String> COLUMNS = Arrays.asList("summonerId", "region", "name", "points", "division");
-    private Region region;
-    private String division;
-    private String name;
-    private int summonerId;
-    private int points;
-
+    private final List<String> COLUMNS = Arrays.asList("id", "region", "name", "points", "division");
 
     @Override
     public boolean removeObject(AbstractModel model) {
@@ -39,7 +35,22 @@ public class Summoner extends AbstractModel {
 
     @Override
     public boolean insertObject(AbstractModel toInsert) throws IllegalArgumentException {
-        return false;
+        if (!this.verifyMap(toInsert.toMap())) {
+            return false;
+        }
+        try {
+            String query = String.format("INSERT INTO %s (id, name) VALUES(?, ?)", tableName);
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, (Integer) toInsert.getValue("summonerId"));
+            st.setString(2, (String) toInsert.getValue("region"));
+            st.setString(3, (String) toInsert.getValue("name"));
+            st.setInt(4, (Integer) toInsert.getValue("points"));
+            st.setString(5, (String) toInsert.getValue("division"));
+            return st.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

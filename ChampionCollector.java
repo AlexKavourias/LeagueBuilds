@@ -30,7 +30,4 @@ public class ChampionCollector extends AbstractCollector {
         champions.forEach(champ -> new database.models.Champion().insertObject(champ));
     }
 
-    public static void main(String[] args) throws RiotApiException {
-        new ChampionCollector("e0b03fac-0d19-49a5-b433-4fd504a7f854").collectChampionInfo(Region.NA);
-    }
 }

@@ -50,7 +50,6 @@ public class Champion extends AbstractModel {
         if (!this.verifyMap(toInsert.toMap())) {
             return false;
         }
-        System.out.println(toInsert.getValue("id") + "\t" + toInsert.getValue("name"));
         try {
             String query = String.format("INSERT INTO %s (id, name) VALUES(?, ?)", tableName);
             PreparedStatement st = conn.prepareStatement(query);

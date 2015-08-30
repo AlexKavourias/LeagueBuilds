@@ -9,7 +9,7 @@ import java.util.Properties;
 public class DatabaseSetup {
     private static Connection conn;
     private static String username = "postgres";
-    private static String password = "secret";
+    private static String password = "jumboweightscotch";
     private static String url = "jdbc:postgresql://localhost:5432/LeagueBuilds";
 
     public DatabaseSetup() {
@@ -42,13 +42,13 @@ public class DatabaseSetup {
     public static void createTables() throws SQLException {
         //Champion table
         setupConnection();
-        conn.createStatement().execute("CREATE TABLE champions " +
+        conn.createStatement().execute("CREATE TABLE IF NOT EXISTS champions " +
                 "(id int PRIMARY KEY," +
                 " name varchar(15))");
-        return; //TODO issue with SQL statements below
+
         //Summoner Table   id (primary key) Region name division-points division ladder-rank
-        /**conn.createStatement().execute("CREATE TABLE Summoners " +
-                "(id int UNIQUE NOT NULL, " +
+        conn.createStatement().execute("CREATE TABLE IF NOT EXISTS Summoners " +
+                "(id int PRIMARY KEY, " +
                 "region VARCHAR(3), " +
                 "name varchar(30)," +
                 "points int," +
@@ -56,16 +56,16 @@ public class DatabaseSetup {
 
         //Matches Table  id (primary key) winner (RED or BLUE) duration .. other info?
         //TODO
-        conn.createStatement().execute("CREATE TABLE Matches " +
-                "(id UNIQUE NOT NULL, " +
+        conn.createStatement().execute("CREATE TABLE IF NOT EXISTS Matches " +
+                "(id int PRIMARY KEY, " +
                 "datePlayed date, " +
                 "winningTeam varchar(4), " +
                 "length int)");
 
         //Build summoner-id(foreign key) match-id(foreign key) items1-6 spell-progression"qwwqwerrqwwe..."
-        conn.createStatement().execute("CREATE TABLE Build " +
-                "(summonerId REFERENCES champions(id)," +
-                "matchId REFERENCES matches(id), " +
+        conn.createStatement().execute("CREATE TABLE IF NOT EXISTS Build " +
+                "(summonerId int REFERENCES champions(id)," +
+                "matchId int REFERENCES matches(id), " +
                 "kills int," +
                 "deaths int," +
                 "assists int," +
@@ -73,7 +73,6 @@ public class DatabaseSetup {
                 "items varchar(256)," +
                 "trinket varchar(30)," +
                 "spell1 varchar(30), " +
-                "spell2 varchar(30),");
-         **/
+                "spell2 varchar(30))");
     }
 }
