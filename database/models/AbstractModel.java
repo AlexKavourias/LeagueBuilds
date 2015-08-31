@@ -1,33 +1,33 @@
 package database.models;
 
+import database.DatabaseLog;
 import database.DatabaseSetup;
 
 import java.sql.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Alex on 8/28/2015.
  */
 abstract class AbstractModel implements Queryable {
     protected static final Connection conn = DatabaseSetup.getConnection();
-    protected static String tableName = "Abstract";
+    protected Map<String, Object> columnsToValues;
 
     public AbstractModel() {
         //Default constructor, used for interacting with methods without specifying object params
+        this.columnsToValues = new HashMap<>();
     }
 
     public AbstractModel(Map<String, Object> parameters) {
-        for (String column : this.getColumnNames()) {
+        for (String column : parameters.keySet()) {
             assert this.getColumnNames().contains(column);
         }
+        this.columnsToValues = parameters;
     }
 
     @Override
-    public Set<AbstractModel> findObject(AbstractModel model) {
-        StringBuilder query = new StringBuilder(String.format("SELECT * FROM %s", tableName));
+    public Set<Queryable> findObject(AbstractModel model) {
+        StringBuilder query = new StringBuilder(String.format("SELECT * FROM %s", this.getTableName()));
         boolean firstParam = true;
         for (String key : model.toMap().keySet()) {
             assert this.getColumnNames().contains(key);
@@ -39,16 +39,12 @@ abstract class AbstractModel implements Queryable {
         }
         try {
             ResultSet result = conn.createStatement().executeQuery(query.toString());
+            DatabaseLog.log(query.toString(), this.getClass().toString());
             return this.resultSetToAbstractModelSet(result);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return new HashSet<>();
-    }
-
-    @Override
-    public String getTableName() {
-        return tableName;
     }
 
     /**
@@ -59,7 +55,7 @@ abstract class AbstractModel implements Queryable {
      */
     protected boolean verifyMap(Map<String, Object> params, boolean strict) {
         if (strict) {
-            return params.keySet().equals(this.toMap().keySet());
+            return params.keySet().equals(new HashSet<>(this.getColumnNames()));
         }
         for (String key : params.keySet()) {
             if (!this.getColumnNames().contains(key))
@@ -69,13 +65,11 @@ abstract class AbstractModel implements Queryable {
     }
 
     public Object getValue(String columnName) {
-        if (this.getColumnNames().contains(columnName))
-            return this.toMap().get(columnName);
-        return null;
+        return this.toMap().get(columnName);
     }
 
     protected abstract Map<String, Object> toMap();
 
-    protected abstract Set<AbstractModel> resultSetToAbstractModelSet(ResultSet result);
+    protected abstract Set<Queryable> resultSetToAbstractModelSet(ResultSet result);
 
 }
