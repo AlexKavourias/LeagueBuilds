@@ -1,14 +1,9 @@
 package database.models;
 
-import database.DatabaseSetup;
-
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Alex on 8/28/2015.
@@ -16,25 +11,34 @@ import java.util.Set;
 public class PlayerBuild extends AbstractModel {
     private final String tableName = "Builds";
     private final List<String> COLUMNS = Arrays.asList(
-            "summonerId", "matchId", "kills", "deaths", "assists", "team", "item1", "item2", "item3",
-            "item4", "item5", "item6", "trinket", "spell1", "spell2"
+            "summonerId", "matchId", "kills", "deaths", "assists", "team", "item0", "item1", "item2", "item3",
+            "item4", "item5", "item6", "spell1", "spell2"
             );
-    private int summonerId;
-    private int matchId;
-    private int kills;
-    private int deaths;
-    private int assists;
-    private String team;
-    private Set<String> items;
-    private String trinket;
-    private String spell1;
-    private String spell2;
 
-    public PlayerBuild() {}
+    public PlayerBuild() { super(); }
+
+    public PlayerBuild(Map<String, Object> parameters) {
+        super(parameters);
+
+    }
+
+    public PlayerBuild(int summonerId, int matchId, int kills, int deaths, int assists, String team,
+                       List<Integer> items, int spell1, int spell2) {
+        super();
+        this.columnsToValues.put("summonerId", summonerId);
+        this.columnsToValues.put("matchId", matchId);
+        this.columnsToValues.put("kills", kills);
+        this.columnsToValues.put("deaths", deaths);
+        this.columnsToValues.put("assists", assists);
+        this.columnsToValues.put("team", team);
+        this.columnsToValues.put("items", items);
+        this.columnsToValues.put("spell1", spell1);
+        this.columnsToValues.put("spell2", spell2);
+    }
 
     @Override
     protected Map<String, Object> toMap() {
-        return null;
+        return this.columnsToValues;
     }
 
     @Override
@@ -44,36 +48,63 @@ public class PlayerBuild extends AbstractModel {
 
 
     @Override
-    protected Set<AbstractModel> resultSetToAbstractModelSet(ResultSet result) {
-        return null;
-    }
-
-    public PlayerBuild(int summonerId, int matchId, int kills, int deaths, int assists, String team,
-                       Set<String> items, String trinket, String spell1, String spell2) {
-        this.summonerId = summonerId;
-        this.matchId = matchId;
-        this.kills = kills;
-        this.deaths = deaths;
-        this.assists = assists;
-        this.team = team;
-        this.items = items;
-        this.trinket = trinket;
-        this.spell1 = spell1;
-        this.spell2 = spell2;
+    protected Set<Queryable> resultSetToAbstractModelSet(ResultSet result) {
+        Set<Queryable> results = new HashSet<>();
+        try {
+            while (result.next()) {
+                //temporary solution, not a fan of this. TODO
+                results.add(new PlayerBuild(result.getInt("summonerId"),
+                        result.getInt("matchId"),
+                        result.getInt("kills"),
+                        result.getInt("deaths"),
+                        result.getInt("assists"),
+                        result.getString("team"),
+                        new ArrayList<Integer>(Arrays.asList(
+                                result.getInt("item0"), result.getInt("item1"), result.getInt("item2"),
+                                result.getInt("item3"), result.getInt("item4"), result.getInt("item5"),
+                                result.getInt("item6"))),
+                        result.getInt("spell1"),
+                        result.getInt("spell2")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return results;
+        }
+        return results;
     }
 
     @Override
     public boolean insertObject(AbstractModel toInsert) throws IllegalArgumentException {
 
-        if (!this.verifyMap(toInsert.toMap()))
-            throw new IllegalArgumentException("Provided Map contains invalid column names");
+//        if (!this.verifyMap(toInsert.toMap(), true))
+//            throw new IllegalArgumentException("Provided Map contains invalid column names");
         try {
-            Statement st = DatabaseSetup.getConnection().createStatement();
-            //TODO
+            PreparedStatement st = conn.prepareStatement(
+                    "INSERT INTO Builds (summonerId, matchId, kills, deaths," +
+                    "assists, team, item0, item1, item2, item3, item4, item5, item6, spell1, spell2) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? , ? , ? , ?, ?, ?, ?)");
+            List items = (List) toInsert.toMap().get("items");
+            st.setInt(1, (Integer) toInsert.getValue("summonerId"));
+            st.setInt(2, (Integer) toInsert.getValue("matchId"));
+            st.setInt(3, (Integer) toInsert.getValue("kills"));
+            st.setInt(4, (Integer) toInsert.getValue("deaths"));
+            st.setInt(5, (Integer) toInsert.getValue("assists"));
+            st.setObject(6, (String) toInsert.getValue("team"));
+            st.setInt(7, (Integer) items.get(0));
+            st.setInt(8, (Integer) items.get(1));
+            st.setInt(9, (Integer) items.get(2));
+            st.setInt(10, (Integer) items.get(3));
+            st.setInt(11, (Integer) items.get(4));
+            st.setInt(12, (Integer) items.get(5));
+            st.setInt(13, (Integer) items.get(6));
+            st.setInt(14, (Integer) toInsert.getValue("spell1"));
+            st.setInt(15, (Integer) toInsert.getValue("spell2"));
+            st.executeUpdate();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return true;
     }
 
     @Override
@@ -93,34 +124,19 @@ public class PlayerBuild extends AbstractModel {
         if (o == null || getClass() != o.getClass()) return false;
 
         PlayerBuild that = (PlayerBuild) o;
-
-        if (summonerId != that.summonerId) return false;
-        if (matchId != that.matchId) return false;
-        if (kills != that.kills) return false;
-        if (deaths != that.deaths) return false;
-        if (assists != that.assists) return false;
-        if (!tableName.equals(that.tableName)) return false;
-        if (!team.equals(that.team)) return false;
-        if (!items.equals(that.items)) return false;
-        if (!trinket.equals(that.trinket)) return false;
-        if (!spell1.equals(that.spell1)) return false;
-        return spell2.equals(that.spell2);
+        return this.toMap().equals(that.toMap());
     }
 
     @Override
     public int hashCode() {
         int result = tableName.hashCode();
-        result = 31 * result + summonerId;
-        result = 31 * result + matchId;
-        result = 31 * result + kills;
-        result = 31 * result + deaths;
-        result = 31 * result + assists;
-        result = 31 * result + team.hashCode();
-        result = 31 * result + items.hashCode();
-        result = 31 * result + trinket.hashCode();
-        result = 31 * result + spell1.hashCode();
-        result = 31 * result + spell2.hashCode();
+        result = 31 * result + this.toMap().hashCode();
         return result;
+    }
+
+    @Override
+    public String getTableName() {
+        return this.tableName;
     }
 
 }
