@@ -14,16 +14,22 @@ public class SummonerCollector extends AbstractCollector {
     }
 
     public void collectChallengerLadder() throws RiotApiException {
-        League league = this.api.getChallengerLeagues();
-        for (Region r : Region.values())
-            for (LeagueEntry entry : league.getEntries()) {
-                    new Summoner().insertObject(new Summoner(
-                            Integer.parseInt(entry.getPlayerOrTeamId()),
-                            api.getRegion(),
-                            entry.getPlayerOrTeamName(),
-                            entry.getLeaguePoints(),
-                            entry.getDivision()));
-                }
+        for (Region r : Region.values()) {
+            api.setRegion(r);
+            for (LeagueEntry entry : api.getChallengerLeagues(r).getEntries()) {
+                new Summoner().insertObject(new Summoner(
+                        Integer.parseInt(entry.getPlayerOrTeamId()),
+                        api.getRegion(),
+                        entry.getPlayerOrTeamName(),
+                        entry.getLeaguePoints(),
+                        entry.getDivision()));
+            }
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

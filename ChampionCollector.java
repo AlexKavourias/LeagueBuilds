@@ -1,10 +1,13 @@
 import constant.Region;
+import database.models.Queryable;
 import dto.Static.Champion;
 import main.java.riotapi.RiotApiException;
 
+import javax.management.Query;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Created by Alex on 8/28/2015.
@@ -27,7 +30,7 @@ public class ChampionCollector extends AbstractCollector {
     }
 
     public void insertIntoDatbase(List<database.models.Champion> champions) {
-        champions.forEach(champ -> new database.models.Champion().insertObject(champ));
+        champions.forEach(champ -> new database.models.Champion().insertObject(champ));;
     }
 
 }
