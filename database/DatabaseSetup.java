@@ -9,7 +9,7 @@ import java.util.Properties;
 public class DatabaseSetup {
     private static Connection conn;
     private static String username = "postgres";
-    private static String password = "jumboweightscotch";
+    private static String password = "secret";
     private static String url = "jdbc:postgresql://localhost:5432/LeagueBuilds";
 
     public DatabaseSetup() {
@@ -49,30 +49,36 @@ public class DatabaseSetup {
         //Summoner Table   id (primary key) Region name division-points division ladder-rank
         conn.createStatement().execute("CREATE TABLE IF NOT EXISTS Summoners " +
                 "(id int PRIMARY KEY, " +
-                "region VARCHAR(3), " +
+                "region VARCHAR(6), " +
                 "name varchar(30)," +
                 "points int," +
-                "division int)");
+                "division VARCHAR(2))");
 
         //Matches Table  id (primary key) winner (RED or BLUE) duration .. other info?
         //TODO
         conn.createStatement().execute("CREATE TABLE IF NOT EXISTS Matches " +
                 "(id int PRIMARY KEY, " +
                 "datePlayed date, " +
+                "region VARCHAR(3)," +
                 "winningTeam varchar(4), " +
                 "length int)");
 
         //Build summoner-id(foreign key) match-id(foreign key) items1-6 spell-progression"qwwqwerrqwwe..."
-        conn.createStatement().execute("CREATE TABLE IF NOT EXISTS Build " +
+        conn.createStatement().execute("CREATE TABLE IF NOT EXISTS Builds " +
                 "(summonerId int REFERENCES champions(id)," +
                 "matchId int REFERENCES matches(id), " +
                 "kills int," +
                 "deaths int," +
                 "assists int," +
-                "team varchar(4), " +
-                "items varchar(256)," +
-                "trinket varchar(30)," +
-                "spell1 varchar(30), " +
-                "spell2 varchar(30))");
+                "team varchar(6), " +
+                "item0 int," +
+                "item1 int," +
+                "item2 int," +
+                "item3 int," +
+                "item4 int," +
+                "item5 int," +
+                "item6 int," +
+                "spell1 int, " +
+                "spell2 int)");
     }
 }
