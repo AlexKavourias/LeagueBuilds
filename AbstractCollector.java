@@ -1,10 +1,5 @@
 import constant.Region;
-import database.models.Queryable;
 import main.java.riotapi.RiotApi;
-import main.java.riotapi.RiotApiException;
-
-import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Created by Alex on 8/28/2015.
