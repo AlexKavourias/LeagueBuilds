@@ -16,14 +16,10 @@ public class Summoner extends AbstractModel {
 
     public Summoner() { super(); }
 
-    public Summoner(int id, String region, String name, int points, String division) {
-        super();
-        this.columnsToValues.put("id", id);
-        this.columnsToValues.put("name", name);
-        this.columnsToValues.put("region", region);
-        this.columnsToValues.put("points", points);
-        this.columnsToValues.put("division", division);
+    public Summoner(Map<String, Object> map) {
+        super(map);
     }
+
     @Override
     public boolean removeObject(AbstractModel model) {
         return false;
@@ -62,18 +58,17 @@ public class Summoner extends AbstractModel {
     }
 
     @Override
-    protected Map<String, Object> toMap() {
-        return this.columnsToValues;
-    }
-
-    @Override
     protected Set<Queryable> resultSetToAbstractModelSet(ResultSet result) {
         Set<Queryable> results = new HashSet<>();
         try {
             while (result.next()) {
-                //temporary solution, not a fan of this. TODO
-                results.add(new Summoner(result.getInt("id"), result.getString("region"), result.getString("name"),
-                                         result.getInt("points"), result.getString("division")));
+                Map<String, Object> map = new HashMap<>();
+                map.put("id", result.getInt("id"));
+                map.put("region", result.getString("region"));
+                map.put("name", result.getInt("points"));
+                map.put("points", result.getInt("points"));
+                map.put("division", result.getString("division"));
+                results.add(new Summoner(map));
             }
         } catch (SQLException e) {
             e.printStackTrace();
