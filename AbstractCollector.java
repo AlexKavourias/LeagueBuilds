@@ -10,14 +10,15 @@ import java.util.function.Consumer;
  * Created by Alex on 8/28/2015.
  */
 abstract class AbstractCollector {
-
+    protected String baseURL = "https://br.api.pvp.net/api/lol/%s/v1.4/%s/%s/%s?api_key=%s";
     protected RiotApi api;
+    protected static final int maxIDs = 40;
+    protected String apiKey;
     protected static final Region[] regions = Region.values();
     protected static final int SEASON = 5;
 
     public AbstractCollector(String apiKey) {
-        if (api == null)
-            api = new RiotApi(apiKey);
+        api = new RiotApi(apiKey);
     }
 
     protected void setRegion(Region region) {
@@ -29,7 +30,6 @@ abstract class AbstractCollector {
     }
 
     protected void queueApiCall() {
-        //TODO
     }
 
 
