@@ -4,6 +4,8 @@ import dto.League.League;
 import dto.League.LeagueEntry;
 import main.java.riotapi.RiotApiException;
 
+import java.util.HashMap;
+
 /**
  * Created by Alex on 8/28/2015.
  */
@@ -17,12 +19,12 @@ public class SummonerCollector extends AbstractCollector {
         for (Region r : Region.values()) {
             api.setRegion(r);
             for (LeagueEntry entry : api.getChallengerLeagues(r).getEntries()) {
-                new Summoner().insertObject(new Summoner(
-                        Integer.parseInt(entry.getPlayerOrTeamId()),
-                        api.getRegion(),
-                        entry.getPlayerOrTeamName(),
-                        entry.getLeaguePoints(),
-                        entry.getDivision()));
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("id", Integer.parseInt(entry.getPlayerOrTeamId()));
+                map.put("name", entry.getPlayerOrTeamName());
+                map.put("points", entry.getLeaguePoints());
+                map.put("division", entry.getDivision());
+                new Summoner().insertObject(new Summoner(map));
             }
             try {
                 Thread.sleep(10000);
