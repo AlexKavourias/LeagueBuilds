@@ -1,8 +1,6 @@
-import constant.Region;
 import dto.Static.Champion;
 import main.java.riotapi.RiotApiException;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
