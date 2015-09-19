@@ -64,11 +64,15 @@ abstract class AbstractModel implements Queryable {
         return true;
     }
 
+    @Override
     public Object getValue(String columnName) {
         return this.toMap().get(columnName);
     }
 
-    protected abstract Map<String, Object> toMap();
+    @Override
+    public Map<String, Object> toMap() {
+        return this.columnsToValues;
+    }
 
     protected abstract Set<Queryable> resultSetToAbstractModelSet(ResultSet result);
 

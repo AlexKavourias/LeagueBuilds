@@ -26,11 +26,6 @@ public class Match extends AbstractModel {
     }
 
     @Override
-    protected Map<String, Object> toMap() {
-        return this.columnsToValues;
-    }
-
-    @Override
     public List<String> getColumnNames() {
         return COLUMNS;
     }
@@ -63,7 +58,7 @@ public class Match extends AbstractModel {
             st.setDate(2, (Date) toInsert.getValue("date"));
             st.setString(3, (String) toInsert.getValue("winningTeam"));
             st.setInt(4, (Integer) toInsert.getValue("length"));
-            System.out.println("Match: " + st.executeUpdate());
+            st.executeUpdate();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();

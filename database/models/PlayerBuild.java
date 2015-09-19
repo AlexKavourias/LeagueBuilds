@@ -37,15 +37,9 @@ public class PlayerBuild extends AbstractModel {
     }
 
     @Override
-    protected Map<String, Object> toMap() {
-        return this.columnsToValues;
-    }
-
-    @Override
     public List<String> getColumnNames() {
         return this.COLUMNS;
     }
-
 
     @Override
     protected Set<Queryable> resultSetToAbstractModelSet(ResultSet result) {

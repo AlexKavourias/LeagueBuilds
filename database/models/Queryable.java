@@ -1,18 +1,17 @@
 package database.models;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-interface Queryable {
+public interface Queryable {
 
     /**
      * Find object matching a given set of parameters in the table belonging to the @class
      * @param model to find
-     * @return True on success
+     * @return Models match model
      */
-    Set<AbstractModel> findObject(AbstractModel model);
+    Set<Queryable> findObject(AbstractModel model);
 
     /**
      * Remove object matching a given object in the table belonging to the @class
@@ -43,8 +42,15 @@ interface Queryable {
      * @return the Mapping
      */
 
+
+    Object getValue(String columnName);
+
+    Map<String, Object> toMap();
+
     List<String> getColumnNames();
 
     String getTableName();
+
+
 
 }

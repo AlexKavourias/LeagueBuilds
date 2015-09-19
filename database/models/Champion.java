@@ -63,8 +63,8 @@ public class Champion extends AbstractModel {
     }
 
     @Override
-    protected Set<AbstractModel> resultSetToAbstractModelSet(ResultSet result) {
-        HashSet<AbstractModel> results = new HashSet<>();
+    protected Set<Queryable> resultSetToAbstractModelSet(ResultSet result) {
+        HashSet<Queryable> results = new HashSet<>();
         try {
             while (result.next()) {
                 //temporary solution, not a fan of this. TODO
@@ -80,5 +80,10 @@ public class Champion extends AbstractModel {
     @Override
     public Map<String, Object> toMap() {
         return this.columnToValue;
+    }
+
+    @Override
+    public String getTableName() {
+        return tableName;
     }
 }
