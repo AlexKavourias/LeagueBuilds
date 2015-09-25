@@ -10,9 +10,7 @@ import main.java.riotapi.RiotApiException;
 
 import java.util.*;
 
-/**
- * Created by Alex on 8/30/2015.
- */
+
 public class MatchAndPlayerBuildCollector extends AbstractCollector {
 
     public MatchAndPlayerBuildCollector(String apiKey) {

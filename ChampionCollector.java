@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * Created by Alex on 8/28/2015.
- */
 public class ChampionCollector extends AbstractCollector {
 
     private List<database.models.Champion> champions;
@@ -28,7 +25,7 @@ public class ChampionCollector extends AbstractCollector {
             Champion champion = championMap.get(name);
             System.out.println(champion.getSpells().size());
         }
-        //this.insertIntoDatbase(champions);
+        this.insertIntoDatbase(champions);
     }
 
     public void insertIntoDatbase(List<database.models.Champion> champions) {

@@ -1,9 +1,7 @@
 import constant.Region;
 import main.java.riotapi.RiotApi;
 
-/**
- * Created by Alex on 8/28/2015.
- */
+
 abstract class AbstractCollector {
     protected String baseURL = "https://br.api.pvp.net/api/lol/%s/v1.4/%s/%s/%s?api_key=%s";
     protected RiotApi api;

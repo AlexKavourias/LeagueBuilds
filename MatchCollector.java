@@ -1,11 +1,9 @@
 import constant.Region;
-import database.models.Queryable;
 import database.models.Summoner;
-
 import main.java.riotapi.Request;
 import main.java.riotapi.RiotApiException;
-
 import java.util.*;
+
 
 public class MatchCollector extends AbstractCollector {
     public MatchCollector(String apiKey) {

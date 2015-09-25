@@ -31,7 +31,7 @@ public interface Queryable {
 
     /**
      *
-     * @param toInsert
+     * @param toInsert Queryable object that is to be inserted
      * @return True on success
      * @throws IllegalArgumentException when {{toInsert}} is not instance of @class
      */

@@ -1,15 +1,11 @@
 package database.models;
 
-import constant.Region;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-/**
- * Created by Alex on 8/28/2015.
- */
+
 public class Summoner extends AbstractModel {
     protected static final String tableName = "Summoners";
     private final List<String> COLUMNS = Arrays.asList("id", "region", "name", "points", "division");

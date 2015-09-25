@@ -3,21 +3,15 @@ package database.models;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 
-/**
- * Created by Alex on 8/28/2015.
- */
 public class Champion extends AbstractModel {
     private final List<String> COLUMNS = Arrays.asList("name", "id");
     private static final String tableName = "Champions";
     private final String insertQuerySnub = "INSERT INTO Champions (id, name) VALUES(";
-    private String name;
-    private int id;
     private Map<String, Object> columnToValue = new HashMap<>();
 
-    public Champion() {}
+    public Champion() { super(); }
 
     public Champion(String name, int id) {
         this.columnToValue.put("name", name);

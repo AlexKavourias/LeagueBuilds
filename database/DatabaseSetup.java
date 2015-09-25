@@ -9,7 +9,7 @@ import java.util.Properties;
 public class DatabaseSetup {
     private static Connection conn;
     private static String username = "postgres";
-    private static String password = "secret";
+    private static String password = "jumboweightscotch";
     private static String url = "jdbc:postgresql://localhost:5432/LeagueBuilds";
 
     public DatabaseSetup() {
@@ -22,6 +22,7 @@ public class DatabaseSetup {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
+            System.out.println("here");
             e.getStackTrace();
         }
         Properties props = new Properties();

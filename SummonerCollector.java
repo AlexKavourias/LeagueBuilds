@@ -1,14 +1,10 @@
 import constant.Region;
 import database.models.Summoner;
-import dto.League.League;
 import dto.League.LeagueEntry;
 import main.java.riotapi.RiotApiException;
-
 import java.util.HashMap;
 
-/**
- * Created by Alex on 8/28/2015.
- */
+
 public class SummonerCollector extends AbstractCollector {
 
     public SummonerCollector(String apiKey) {

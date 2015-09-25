@@ -2,9 +2,7 @@ import dto.League.LeagueEntry;
 import main.java.riotapi.RiotApi;
 import main.java.riotapi.RiotApiException;
 
-/**
- * Created by Alex on 8/28/2015.
- */
+
 public class RiotExample {
 
     private RiotApi api;

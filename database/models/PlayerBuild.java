@@ -5,13 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-/**
- * Created by Alex on 8/28/2015.
- */
+
 public class PlayerBuild extends AbstractModel {
     private final String tableName = "Builds";
     private final List<String> COLUMNS = Arrays.asList(
-            "summonerId", "matchId", "kills", "deaths", "assists", "team", "item0", "item1", "item2", "item3",
+            "summonerId", "matchId", "kills", "deaths", "assists",
+            "team", "item0", "item1", "item2", "item3",
             "item4", "item5", "item6", "spell1", "spell2"
             );
 
@@ -115,7 +114,6 @@ public class PlayerBuild extends AbstractModel {
     public boolean equals(Object o) {
         if (!(o instanceof PlayerBuild)) return false;
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
         PlayerBuild that = (PlayerBuild) o;
         return this.toMap().equals(that.toMap());

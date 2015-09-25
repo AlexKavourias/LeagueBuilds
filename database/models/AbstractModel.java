@@ -6,9 +6,6 @@ import database.DatabaseSetup;
 import java.sql.*;
 import java.util.*;
 
-/**
- * Created by Alex on 8/28/2015.
- */
 abstract class AbstractModel implements Queryable {
     protected static final Connection conn = DatabaseSetup.getConnection();
     protected Map<String, Object> columnsToValues;
@@ -24,6 +21,25 @@ abstract class AbstractModel implements Queryable {
         }
         this.columnsToValues = parameters;
     }
+
+    /**
+     * verifies that the provided Map does not contain a column that is not one of the table's column names
+     * @param params the Map to verify
+     * @param strict when true, will make sure that the given map has a value for everyone column
+     * @return true if the Map is valid, false otherwise
+     */
+    protected boolean verifyMap(Map<String, Object> params, boolean strict) {
+        if (strict) {
+            return params.keySet().equals(new HashSet<>(this.getColumnNames()));
+        }
+        for (String key : params.keySet()) {
+            if (!this.getColumnNames().contains(key))
+                return false;
+        }
+        return true;
+    }
+
+    protected abstract Set<Queryable> resultSetToAbstractModelSet(ResultSet result);
 
     @Override
     public Set<Queryable> findObject(AbstractModel model) {
@@ -47,23 +63,6 @@ abstract class AbstractModel implements Queryable {
         return new HashSet<>();
     }
 
-    /**
-     * verifies that the provided Map does not contain a column that is not one of the table's column names
-     * @param params the Map to verify
-     * @param strict when true, will make sure that the given map has a value for everyone column
-     * @return true if the Map is valid, false otherwise
-     */
-    protected boolean verifyMap(Map<String, Object> params, boolean strict) {
-        if (strict) {
-            return params.keySet().equals(new HashSet<>(this.getColumnNames()));
-        }
-        for (String key : params.keySet()) {
-            if (!this.getColumnNames().contains(key))
-                return false;
-        }
-        return true;
-    }
-
     @Override
     public Object getValue(String columnName) {
         return this.toMap().get(columnName);
@@ -73,7 +72,5 @@ abstract class AbstractModel implements Queryable {
     public Map<String, Object> toMap() {
         return this.columnsToValues;
     }
-
-    protected abstract Set<Queryable> resultSetToAbstractModelSet(ResultSet result);
 
 }

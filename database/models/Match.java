@@ -6,9 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-/**
- * Created by Alex on 8/28/2015.
- */
+
 public class Match extends AbstractModel {
     public static final String tableName = "Matches";
     public static List<String> COLUMNS = Arrays.asList("id", "datePlayed", "length");
