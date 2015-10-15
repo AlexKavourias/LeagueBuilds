@@ -22,9 +22,4 @@ abstract class AbstractCollector {
         return this.api;
     }
 
-    protected void queueApiCall() {
-    }
-
-
-
 }
